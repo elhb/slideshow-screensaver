@@ -50,6 +50,10 @@ class Screensaver():
         self.fps_clock = pygame.time.Clock()
         
     def show_picture(self):
+        
+        #Cover up image in the background
+        self.screen.fill(BLACK)
+    
         random_pic = self.pics.get_random()
         image = pygame.image.load(random_pic).convert()
         
