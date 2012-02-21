@@ -59,7 +59,6 @@ class Screensaver():
         
         # Resize image to fit on screen
         image_x, image_y = image.get_size()
-        print "Original Image Size: {0}x{1}".format(image_x, image_y)
         image_ratio = float(image_x) / image_y
         if image_ratio >= self.screen_ratio:
             resized_x = self.screen_x
@@ -67,7 +66,6 @@ class Screensaver():
         else:
             resized_y = self.screen_y
             resized_x = (resized_y * image_x) / image_y
-        print "Scaled Image Size: {0}x{1}".format(resized_x, resized_y)
         image = pygame.transform.scale(image, (resized_x, resized_y))
         
         # Center image
