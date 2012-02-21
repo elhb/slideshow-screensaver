@@ -1,4 +1,4 @@
-import os.path
+import os
 import random
 import mimetypes
 
@@ -20,6 +20,7 @@ class Pictures():
                 filepath = os.path.join(directory, filename)
                 if mimetypes.guess_type(filepath)[0] == 'image/jpeg':
                     self.pics.append(filepath)
+        print "{0} pictures found".format(len(self.pics))
                     
     def get_random(self):
     
