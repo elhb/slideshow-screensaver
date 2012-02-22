@@ -2,7 +2,7 @@
 
 import dbus
 
-def activated():
+def is_locked():
     session_bus = dbus.SessionBus()
     dbus_object  = session_bus.get_object("org.gnome.ScreenSaver","/")
     status = dbus_object.GetActive(dbus_interface="org.gnome.ScreenSaver")
