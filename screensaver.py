@@ -4,7 +4,7 @@ from pygame.locals import *
 import util
 
 BLACK = (0, 0, 0)
-FPS = 30
+FPS = 5
 PICTURE_DIR = "/home/james/Pictures/wallpapers"
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
