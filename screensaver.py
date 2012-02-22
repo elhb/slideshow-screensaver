@@ -42,8 +42,12 @@ class Screensaver():
     def _initialize_screen(self):
         """..."""
         
-        self.screen = pygame.display.set_mode((self.screen_x, self.screen_y),
-                                              pygame.FULLSCREEN )
+#        self.screen = pygame.display.set_mode((self.screen_x, self.screen_y),
+#                                              pygame.FULLSCREEN )
+        self.screen = pygame.display.set_mode((self.screen_x, self.screen_y), 
+                      pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE
+                      )
+        
         pygame.display.set_caption('Slideshow Screensaver')
         
     def _initialize_clock(self):
@@ -60,12 +64,14 @@ class Screensaver():
         # Resize image to fit on screen
         image_x, image_y = image.get_size()
         image_ratio = float(image_x) / image_y
+        
         if image_ratio >= self.screen_ratio:
             resized_x = self.screen_x
-            resized_y = (resized_x * image_y) / image_x
+            resized_y = (resized_x * image_y) / image_x   
         else:
             resized_y = self.screen_y
             resized_x = (resized_y * image_x) / image_y
+            
         image = pygame.transform.scale(image, (resized_x, resized_y))
         
         # Center image
