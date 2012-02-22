@@ -2,12 +2,17 @@ import sys
 import pygame
 from pygame.locals import *
 import util
+import lock_screen
 
 BLACK = (0, 0, 0)
 FPS = 5
 PICTURE_DIR = "/home/james/Pictures/wallpapers"
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
+
+# Delay to check if the screen is locked.
+LOCK_CHECK_EVENT = USEREVENT + 2
+LOCK_CHECK_DELAY = 2000
 
 
 # TODO: Can this be improved to make it more easily imported by other 
@@ -53,6 +58,12 @@ class Screensaver():
     def _initialize_clock(self):
         self.fps_clock = pygame.time.Clock()
         
+    def _lock_screen_activated(self):
+        """Check if computer is locked"""
+        
+        is_locked = lock_screen.activated()
+        return is_locked
+        
     def show_picture(self):
         
         #Cover up image in the background
@@ -84,9 +95,10 @@ class Screensaver():
         
     def run(self):
         
-        # Load first picture and start timer
+        # Load first picture and start timers
         self.show_picture()
         pygame.time.set_timer(UPDATE_PICTURE_EVENT, PICTURE_DELAY)
+        pygame.time.set_timer(LOCK_CHECK_EVENT, LOCK_CHECK_DELAY)
         
         # Hide mouse cursor
         pygame.mouse.set_visible(False)
@@ -97,9 +109,16 @@ class Screensaver():
         while True:
             event = pygame.event.poll()
             
+            # Show new picture after delay
             if event.type == UPDATE_PICTURE_EVENT:
                 self.show_picture()
-                
+            
+            # Exit if screen is locked
+            elif event.type == LOCK_CHECK_EVENT:
+                if self._lock_screen_activated():
+                    self.quit()
+            
+            # Exit if any other events are detected
             elif event.type != pygame.NOEVENT:
                 self.quit()
                 
