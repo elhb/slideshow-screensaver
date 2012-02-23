@@ -28,8 +28,7 @@ class System():
         
     def start_screensaver(self):
         print "Starting screensaver"
-        process = subprocess.Popen(["python2", 
-          "/home/james/aptana_workspace/slideshow-screensaver/screensaver.py"])
+        process = subprocess.Popen(["screensaver.py"])
         
         return process
     
