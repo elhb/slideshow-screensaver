@@ -16,7 +16,6 @@ class System():
         self.screensaver_on = False
         self.screensaver = None
         self.locked = False
-    
 
     def check_idle(self, delay):
         self.idle = checkidle.is_idle(delay)
@@ -25,6 +24,18 @@ class System():
     def check_locked(self):
         self.locked = checklock.is_locked()
         return self.locked
+        
+    def _check_screensaver(self):
+    
+        try:
+            retcode = self.screensaver.poll()
+            if retcode is not None:
+                self.screensaver_on = False
+            else:
+                self.screensaver_on = True
+        except AttributeError:
+            print "Screensaver not started yet"
+            self.screensaver_on = False
         
     def start_screensaver(self):
         print "Starting screensaver"
@@ -37,6 +48,12 @@ class System():
         # Use decorators to call these when attributes are read?
         self.check_idle(self.SCREENSAVER_DELAY)
         self.check_locked()
+        
+        # TODO: Have screensaver emit dbus signal when it dies, or use
+        #       idle time to determine this?
+        #
+        # Know if screensaver killed itself
+        self._check_screensaver()
         
         print "Screensaver callback"
         if self.screensaver_on and not self.locked:
