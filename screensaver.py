@@ -1,11 +1,14 @@
 import sys
+import os
+
 import pygame
 from pygame.locals import *
+
 import util
 
 BLACK = (0, 0, 0)
 FPS = 5
-PICTURE_DIR = "/home/james/Pictures/wallpapers"
+PICTURE_DIR = os.path.expanduser("~/Pictures")
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
 
@@ -26,7 +29,7 @@ class Screensaver():
         self._initialize_screen()
         self._initialize_clock()
         
-        self.pics = util.Pictures()
+        self.pics = util.Pictures(PICTURE_DIR)
         
         self.run()
         
