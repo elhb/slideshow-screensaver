@@ -45,7 +45,7 @@ class System():
         
         elif self.screensaver_on and self.locked:
             print "Killing screensaver"
-            self.screensaver.kill()
+            self.screensaver.terminate()
             self.screensaver_on = False
         
         elif self.idle and not self.locked:
