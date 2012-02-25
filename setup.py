@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='Slideshow Screensaver',
+setup(name='slideshow-screensaver',
       version='0.1',
       description='Slideshow screensaver for Gnome based on Pygame',
       keywords=['slideshow', 'screensaver', 'gnome'],
