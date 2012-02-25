@@ -1,4 +1,4 @@
-# Alternative to xautolock
+#!/usr/bin/env python
 
 import subprocess
 from gi.repository import GObject
