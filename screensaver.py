@@ -4,7 +4,7 @@ import os
 import pygame
 from pygame.locals import *
 
-import util
+from slidesaver import util
 
 BLACK = (0, 0, 0)
 FPS = 5

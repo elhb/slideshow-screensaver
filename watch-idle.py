@@ -2,8 +2,7 @@
 
 import subprocess
 from gi.repository import GObject
-import checklock
-import checkidle
+from slidesaver import checklock, checkidle
 
 
 class System():
