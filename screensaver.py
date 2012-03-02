@@ -62,11 +62,8 @@ class Screensaver():
     def _initialize_screen(self):
         """..."""
 
-#        self.screen = pygame.display.set_mode((self.screen_x, self.screen_y),
-#                                              pygame.FULLSCREEN )
         self.screen = pygame.display.set_mode((self.screen_x, self.screen_y),
-                      pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE
-                      )
+                                              pygame.FULLSCREEN)
 
         pygame.display.set_caption('Slideshow Screensaver')
 
