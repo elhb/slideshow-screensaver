@@ -18,4 +18,4 @@ setup(name='slideshow-screensaver',
       long_description=long_description,
 
       # Also requires dbus-python and python-gobject
-      install_requires=["distribute", "pygame"])
+      install_requires=["distribute", "pyglet", "PIL"])

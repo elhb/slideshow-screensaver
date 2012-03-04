@@ -1,137 +1,96 @@
 #!/usr/bin/env python
 
-# Slideshow Screensaver
-# Copyright (C) 2012 James Adney
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3 of the License.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import sys
 import os
+import pyglet
 
-import pygame
-from pygame.locals import *
+import Image
 
 from slidesaver import util
 
-BLACK = (0, 0, 0)
-FPS = 5
 PICTURE_DIR = os.path.expanduser("~/Pictures")
-UPDATE_PICTURE_EVENT = USEREVENT + 1
-PICTURE_DELAY = 10000   # Time between pictures in milliseconds
 
-
-# TODO: Can this be improved to make it more easily imported by other
-#       applications?
-#
-# Class to encapsulate the entire application
-class Screensaver():
-    """..."""
+class AppWindow(pyglet.window.Window):
 
     def __init__(self):
-        """..."""
-        # TODO: Is this the best place to call this
-        pygame.init()
 
-        self._set_screen_size()
-        self._initialize_screen()
-        self._initialize_clock()
+        super(AppWindow, self).__init__(fullscreen=True)
+
+        #Hide mouse cursor
+        self.set_mouse_visible(False)
 
         self.pics = util.Pictures(PICTURE_DIR)
-
-        self.run()
-
-    def _set_screen_size(self):
-        """..."""
-
-        # get size of fullscreen display into screen_x, screen_y
-        modes = pygame.display.list_modes()    # defaults to fullscreen
-        modes.sort()                           # largest goes last
-        self.screen_x, self.screen_y = modes[-1]
+        self.screen_x = self.width
+        self.screen_y = self.height
         self.screen_ratio = float(self.screen_x) / self.screen_y
+        self.center_x = self.screen_x // 2
+        self.center_y = self.screen_y // 2
 
-    def _initialize_screen(self):
-        """..."""
+        self.load_new_image()
 
-        self.screen = pygame.display.set_mode((self.screen_x, self.screen_y),
-                                              pygame.FULLSCREEN)
-
-        pygame.display.set_caption('Slideshow Screensaver')
-
-    def _initialize_clock(self):
-        self.fps_clock = pygame.time.Clock()
-
-    def show_picture(self):
-
-        #Cover up image in the background
-        self.screen.fill(BLACK)
-
+    def load_new_image(self, dt=None):
         random_pic = self.pics.get_random()
-        image = pygame.image.load(random_pic).convert()
+
+        temp_image = Image.open(random_pic)
 
         # Resize image to fit on screen
-        image_x, image_y = image.get_size()
+        image_x, image_y = temp_image.size
         image_ratio = float(image_x) / image_y
 
         if image_ratio >= self.screen_ratio:
             resized_x = self.screen_x
-            resized_y = (resized_x * image_y) / image_x
+            resized_y = (resized_x * image_y) // image_x
         else:
             resized_y = self.screen_y
-            resized_x = (resized_y * image_x) / image_y
+            resized_x = (resized_y * image_x) // image_y
 
-        image = pygame.transform.scale(image, (resized_x, resized_y))
+        temp_image = temp_image.resize((resized_x, resized_y))
+        raw_image = temp_image.tostring()
 
-        # Center image
-        image_rect = image.get_rect()
-        image_rect.center = self.screen.get_rect().center
+        self.image = pyglet.image.ImageData(resized_x,
+                                            resized_y,
+                                            'RGB',
+                                            raw_image,
+                                            pitch= -resized_x * 3)
 
-        self.screen.blit(image, image_rect)
+        # Set anchor of sprite to center of image
+        self.image.anchor_x = self.image.width // 2
+        self.image.anchor_y = self.image.height // 2
 
-        pygame.display.update()
+        self.picture = pyglet.sprite.Sprite(self.image)
 
-    def run(self):
+        # Move sprite to center
+        self.picture.set_position(self.center_x, self.center_y)
 
-        # Load first picture and start timers
-        self.show_picture()
-        pygame.time.set_timer(UPDATE_PICTURE_EVENT, PICTURE_DELAY)
 
-        # Hide mouse cursor
-        pygame.mouse.set_visible(False)
-
-        # Clear initial mouse event
-        pygame.event.clear()
-
-        while True:
-            event = pygame.event.poll()
-
-            # Show new picture after delay
-            if event.type == UPDATE_PICTURE_EVENT:
-                self.show_picture()
-
-            # Exit if any other events are detected
-            elif event.type != pygame.NOEVENT:
-                self.quit()
-
-            self.fps_clock.tick(FPS)
-
-    def quit(self):
-
-        # Close screensaver quickly
-        pygame.display.quit()
-
-        pygame.quit()
-        sys.exit()
+def quit(window):
+    window.close()
+    pyglet.app.exit()
 
 
 if __name__ == "__main__":
-    app = Screensaver()
+
+    app = AppWindow()
+    pyglet.clock.schedule_interval(app.load_new_image, 10)
+
+    @app.event
+    def on_draw():
+        app.clear()
+        app.picture.draw()
+
+    @app.event
+    def on_key_press(symbol, modifiers):
+        quit(app)
+
+    @app.event
+    def on_mouse_press(x, y, button, modifiers):
+        quit(app)
+
+    @app.event
+    def on_mouse_scroll(x, y, scroll_x, scroll_y):
+        quit(app)
+
+    @app.event
+    def on_mouse_motion(x, y, dx, dy):
+        quit(app)
+
+    pyglet.app.run()
