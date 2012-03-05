@@ -1,14 +1,14 @@
 ##########################
-Slideshow Screensaver v0.1
+Slideshow Screensaver v0.2
 ##########################
 
 Introduction
 ############
 
-Slideshow Screensaver is a screensaver for Gnome which displays a new photo
-every 10 seconds from ``$HOME/Pictures``.  If you want to customize the photo
-directory, the time between photos or the screensaver delay you will need to
-edit the source code for now.
+Slideshow Screensaver is a screensaver which displays a new photo every 10 
+seconds from ``$HOME/Pictures``.  If you want to customize the photo directory, 
+the time between photos or the screensaver delay you will need to edit the 
+source code for now.
 
 This is a very simple app which, for now, might not play nicely with
 xscreensaver, gnome-screensaver, etc.
@@ -19,8 +19,7 @@ Installation
 1. Install the system-wide dependencies:
 
 	- python 2.7
-	- python-gobject (for GObject 3+)
-	- dbus-python
+	- xautolock
 	
 2. Install the python package: ::
 
@@ -29,7 +28,7 @@ Installation
 3. Configure the screensaver to run automatically:
 
 	- Disable any other screensavers.
-	- Make ``watch-idle.py`` run at startup.
+	- Make ``slidesaver-daemon`` run at startup.
 	
 Plans
 #####
@@ -38,9 +37,9 @@ Short-term
 ==========
 
 - GUI Configuration.
-- Use Gnome-Session to start watch-idle
-- Use Gnome-Session to watch for idle
-- Don't clash with gnome-screensaver
+- Work around other screensavers
+- Alternative to xautolock?
+- 2D and 3D versions
 - Distribution packages
 
 Long-term
