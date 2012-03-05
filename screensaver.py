@@ -58,7 +58,8 @@ class AppWindow(pyglet.window.Window):
         image_x, image_y = temp_image.size
         image_ratio = float(image_x) / image_y
 
-        if CROP:
+        # Crop horizontally-oriented images to fill the screen
+        if CROP and image_ratio > 1:
             if image_ratio >= self.screen_ratio:
                 resized_y = self.screen_y
                 resized_x = (resized_y * image_x) // image_y
