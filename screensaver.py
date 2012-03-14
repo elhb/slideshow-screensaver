@@ -10,6 +10,7 @@ import Image
 
 from slidesaver import util
 
+PHOTO_APP = 'shotwell'
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 CROP = True
 PICTURE_DELAY = 10
@@ -33,6 +34,7 @@ class AppWindow(pyglet.window.Window):
         self.transitioning = False
         self.old_picture = None
         self.picture = None
+        self.picture_path = ""
         self.time = 0
 
         self.load_new_image()
@@ -55,8 +57,16 @@ class AppWindow(pyglet.window.Window):
         if self.old_picture:
             self.old_picture.scale += .05 * dt
 
+    def reactivate(self, dt):
+        self.activate()
 
     def load_new_image(self):
+
+        # Window loses focus when automatically maximized.
+        # This helps give it focused (though it's not guaranteed to work. It
+        # doesn't seem to work at all if called right after/before maximizing.
+#        self.activate()
+
         random_pic = self.pics.get_random()
         temp_image = Image.open(random_pic)
 
@@ -97,6 +107,7 @@ class AppWindow(pyglet.window.Window):
             self.old_picture = self.picture
 
         self.picture = pyglet.sprite.Sprite(self.image)
+        self.picture_path = random_pic
 
         # Move sprite to center
         self.picture.set_position(self.center_x, self.center_y)
@@ -121,6 +132,9 @@ def pause(window):
     pyglet.clock.unschedule(window.tick_picture_clock)
     pyglet.clock.unschedule(window.increase_opacity)
     window.paused = True
+    window.set_fullscreen(False)
+    window.minimize()
+    subprocess.Popen([PHOTO_APP, app.picture_path])
 
 
 def quit(window):
@@ -156,12 +170,24 @@ if __name__ == "__main__":
             app.old_picture.draw()
 
     @app.event
+    def on_activate():
+        if app.paused:
+            app.set_fullscreen(True)
+            start(app)
+            pyglet.clock.schedule_once(app.reactivate, 1)
+        else:
+            pass
+
+    @app.event
     def on_key_press(symbol, modifiers):
         if symbol == key.SPACE:
             if app.paused:
+                app.set_fullscreen(True)
                 start(app)
+                print "space and paused"
             else:
                 pause(app)
+                print "space and not paused"
         else:
             quit(app)
 
