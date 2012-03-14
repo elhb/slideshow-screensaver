@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import subprocess
+
 import pyglet
+from pyglet.window import key
 
 import Image
 
@@ -9,6 +12,7 @@ from slidesaver import util
 
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 CROP = True
+PICTURE_DELAY = 10
 
 class AppWindow(pyglet.window.Window):
 
@@ -19,6 +23,7 @@ class AppWindow(pyglet.window.Window):
         #Hide mouse cursor
         self.set_mouse_visible(False)
 
+        self.paused = False
         self.pics = util.Pictures(PICTURE_DIR)
         self.screen_x = self.width
         self.screen_y = self.height
@@ -28,6 +33,7 @@ class AppWindow(pyglet.window.Window):
         self.transitioning = False
         self.old_picture = None
         self.picture = None
+        self.time = 0
 
         self.load_new_image()
 
@@ -49,9 +55,9 @@ class AppWindow(pyglet.window.Window):
         if self.old_picture:
             self.old_picture.scale += .05 * dt
 
-    def load_new_image(self, dt=None):
-        random_pic = self.pics.get_random()
 
+    def load_new_image(self):
+        random_pic = self.pics.get_random()
         temp_image = Image.open(random_pic)
 
         # Resize image to fit on screen
@@ -97,6 +103,25 @@ class AppWindow(pyglet.window.Window):
         self.picture.opacity = 0
         self.transitioning = True
 
+    # Keep track of elapsed time so we can resume where we left off
+    def tick_picture_clock(self, dt):
+        if self.time <= PICTURE_DELAY:
+            self.time += dt
+        else:
+            self.load_new_image()
+            self.time = 0
+
+def start(window):
+    pyglet.clock.schedule_interval(window.increase_opacity, 1.0 / 120)
+    pyglet.clock.schedule_interval(window.tick_picture_clock, 1.0 / 15)
+    window.paused = False
+
+
+def pause(window):
+    pyglet.clock.unschedule(window.tick_picture_clock)
+    pyglet.clock.unschedule(window.increase_opacity)
+    window.paused = True
+
 
 def quit(window):
     window.close()
@@ -106,8 +131,7 @@ def quit(window):
 if __name__ == "__main__":
 
     app = AppWindow()
-    pyglet.clock.schedule_interval(app.increase_opacity, 1.0 / 120)
-    pyglet.clock.schedule_interval(app.load_new_image, 10)
+    start(app)
 #    pyglet.clock.schedule_interval(app.zoom, 1.0 / 30)
 
     @app.event
@@ -119,7 +143,13 @@ if __name__ == "__main__":
 
     @app.event
     def on_key_press(symbol, modifiers):
-        quit(app)
+        if symbol == key.SPACE:
+            if app.paused:
+                start(app)
+            else:
+                pause(app)
+        else:
+            quit(app)
 
     @app.event
     def on_mouse_press(x, y, button, modifiers):
