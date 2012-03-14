@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import time
 
 import pyglet
 from pyglet.window import key
@@ -14,6 +15,13 @@ PHOTO_APP = 'shotwell'
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 CROP = True
 PICTURE_DELAY = 10
+
+
+paused_label = pyglet.text.Label('Paused',
+                                  font_name='Ubuntu',
+                                  font_size=36,
+                                  x=10, y=10)
+
 
 class AppWindow(pyglet.window.Window):
 
@@ -35,6 +43,7 @@ class AppWindow(pyglet.window.Window):
         self.old_picture = None
         self.picture = None
         self.picture_path = ""
+        self.old_picture_path = ""
         self.time = 0
 
         self.load_new_image()
@@ -105,6 +114,7 @@ class AppWindow(pyglet.window.Window):
 
         if self.picture:
             self.old_picture = self.picture
+            self.old_picture_path = self.picture_path
 
         self.picture = pyglet.sprite.Sprite(self.image)
         self.picture_path = random_pic
@@ -121,6 +131,17 @@ class AppWindow(pyglet.window.Window):
         else:
             self.load_new_image()
             self.time = 0
+            
+            
+def start_photo_app(dt, window):
+    if window.transitioning and window.old_picture_path:        # Open previous picture if tranisitioning
+        subprocess.call([PHOTO_APP, window.old_picture_path])
+    else:
+        subprocess.call([PHOTO_APP, window.picture_path])       # Otherwise open current picture
+    time.sleep(1)   #FIXME: Get rid of this.
+    app.set_fullscreen(True)
+    start(app)
+            
 
 def start(window):
     pyglet.clock.schedule_interval(window.increase_opacity, 1.0 / 120)
@@ -132,9 +153,6 @@ def pause(window):
     pyglet.clock.unschedule(window.tick_picture_clock)
     pyglet.clock.unschedule(window.increase_opacity)
     window.paused = True
-    window.set_fullscreen(False)
-    window.minimize()
-    subprocess.Popen([PHOTO_APP, app.picture_path])
 
 
 def quit(window):
@@ -168,6 +186,8 @@ if __name__ == "__main__":
         app.picture.draw()
         if app.old_picture:
             app.old_picture.draw()
+        if app.paused:
+            paused_label.draw()
 
     @app.event
     def on_activate():
@@ -178,16 +198,18 @@ if __name__ == "__main__":
         else:
             pass
 
+    #TODO: Make screensaver not close on mouse movement, etc. when paused
     @app.event
     def on_key_press(symbol, modifiers):
         if symbol == key.SPACE:
             if app.paused:
                 app.set_fullscreen(True)
                 start(app)
-                print "space and paused"
             else:
                 pause(app)
-                print "space and not paused"
+                app.set_fullscreen(False)
+                paused_label.draw()
+                pyglet.clock.schedule_once(start_photo_app, 1.0/4, window=app)
         else:
             quit(app)
 
