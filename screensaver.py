@@ -11,7 +11,7 @@ import Image
 
 from slidesaver import util
 
-PHOTO_APP = 'shotwell'
+PHOTO_APP = 'eog'
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 CROP = True
 PICTURE_DELAY = 10
@@ -131,8 +131,8 @@ class AppWindow(pyglet.window.Window):
         else:
             self.load_new_image()
             self.time = 0
-            
-            
+
+
 def start_photo_app(dt, window):
     if window.transitioning and window.old_picture_path:        # Open previous picture if tranisitioning
         subprocess.call([PHOTO_APP, window.old_picture_path])
@@ -141,7 +141,7 @@ def start_photo_app(dt, window):
     time.sleep(1)   #FIXME: Get rid of this.
     app.set_fullscreen(True)
     start(app)
-            
+
 
 def start(window):
     pyglet.clock.schedule_interval(window.increase_opacity, 1.0 / 120)
@@ -209,7 +209,7 @@ if __name__ == "__main__":
                 pause(app)
                 app.set_fullscreen(False)
                 paused_label.draw()
-                pyglet.clock.schedule_once(start_photo_app, 1.0/4, window=app)
+                pyglet.clock.schedule_once(start_photo_app, 1.0 / 4, window=app)
         else:
             quit(app)
 
