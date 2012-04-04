@@ -124,7 +124,6 @@ class Screensaver():
 
         self.image = image
         self.image_rect = image_rect
-        print self.image_paths
 
     def run(self):
 
@@ -143,7 +142,6 @@ class Screensaver():
             ### EVENT HANDLING ################################################
 
             for event in pygame.event.get():
-                print event
 
                 # Don't exit all the time when paused
                 if self.paused:
