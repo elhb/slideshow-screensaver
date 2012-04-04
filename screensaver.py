@@ -33,7 +33,7 @@ PICTURE_DELAY = 10000   # Time between pictures in milliseconds
 TRANSITION_TIME = 1.5  # Transition time between photos in seconds.
 _TRANS_INCR = int(255 / (TRANSITION_TIME * FPS)) # Opacity change per frame
 
-PHOTO_APP_CMD = ["eog", "-n"]
+PHOTO_APP_CMD = ["eog", "-n", "-f"]
 
 
 # TODO: Can this be improved to make it more easily imported by other
@@ -94,12 +94,20 @@ class Screensaver():
         image_x, image_y = image.get_size()
         image_ratio = float(image_x) / image_y
 
+        # Crop really wide images to fill screen
         if image_ratio >= self.screen_ratio:
-            resized_x = self.screen_x
-            resized_y = (resized_x * image_y) / image_x
-        else:
             resized_y = self.screen_y
             resized_x = (resized_y * image_x) / image_y
+        else:
+            # Crop pretty wide images to fill screen
+            if image_ratio >= 1:
+                resized_x = self.screen_x
+                resized_y = (resized_x * image_y) / image_x
+
+            # Images that are square or vertically-oriented don't get cropped
+            else:
+                resized_y = self.screen_y
+                resized_x = (resized_y * image_x) / image_y
 
         image = pygame.transform.scale(image, (resized_x, resized_y))
 
@@ -132,9 +140,12 @@ class Screensaver():
 
         while True:
 
+            ### EVENT HANDLING ################################################
+
             for event in pygame.event.get():
                 print event
 
+                # Don't exit all the time when paused
                 if self.paused:
                     if event.type == MOUSEBUTTONUP:
                         pygame.display.toggle_fullscreen()
@@ -145,6 +156,7 @@ class Screensaver():
                     if event.type == UPDATE_PICTURE_EVENT:
                         self.next_picture()
 
+                    # Space key pauses app and launches photo manager
                     elif event.type == KEYDOWN and event.key == K_SPACE:
                         pygame.display.toggle_fullscreen()
                         self.paused = True
@@ -162,6 +174,7 @@ class Screensaver():
                 if event.type == pygame.QUIT:
                     self.quit()
 
+            ## DRAW ALL THE THINGS ############################################
             if not self.paused:
 
                 # Draw the background
