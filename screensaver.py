@@ -24,7 +24,7 @@ from pygame.locals import *
 from slidesaver import util
 
 BLACK = (0, 0, 0)
-FPS = 5
+FPS = 30
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
@@ -70,10 +70,7 @@ class Screensaver():
     def _initialize_clock(self):
         self.fps_clock = pygame.time.Clock()
 
-    def show_picture(self):
-
-        #Cover up image in the background
-        self.screen.fill(BLACK)
+    def next_picture(self):
 
         random_pic = self.pics.get_random()
         image = pygame.image.load(random_pic).convert()
@@ -95,14 +92,16 @@ class Screensaver():
         image_rect = image.get_rect()
         image_rect.center = self.screen.get_rect().center
 
-        self.screen.blit(image, image_rect)
+        # Set image as initally transparent
+        image.set_alpha(0)
 
-        pygame.display.update()
+        self.image = image
+        self.image_rect = image_rect
 
     def run(self):
 
         # Load first picture and start timers
-        self.show_picture()
+        self.next_picture()
         pygame.time.set_timer(UPDATE_PICTURE_EVENT, PICTURE_DELAY)
 
         # Hide mouse cursor
@@ -114,9 +113,19 @@ class Screensaver():
         while True:
             event = pygame.event.poll()
 
+            # Draw the background
+            self.screen.fill(BLACK)
+
+            # Draw image to screen
+            self.screen.blit(self.image, self.image_rect)
+            pygame.display.update()
+
+            #Fade out image
+            self.image.set_alpha(self.image.get_alpha() + 5)
+
             # Show new picture after delay
             if event.type == UPDATE_PICTURE_EVENT:
-                self.show_picture()
+                self.next_picture()
 
             # Exit if any other events are detected
             elif event.type != pygame.NOEVENT:
