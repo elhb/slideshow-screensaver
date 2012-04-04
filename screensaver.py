@@ -54,6 +54,10 @@ class Screensaver():
         self.image = None
         self.old_image = None
 
+        # List of images loaded
+        self.image_paths = []
+        self.paused = False
+
         self.run()
 
     def _set_screen_size(self):
@@ -79,6 +83,8 @@ class Screensaver():
     def next_picture(self):
 
         random_pic = self.pics.get_random()
+        self.image_paths.append(random_pic)
+
         image = pygame.image.load(random_pic).convert()
 
         # Resize image to fit on screen
@@ -107,6 +113,7 @@ class Screensaver():
 
         self.image = image
         self.image_rect = image_rect
+        print self.image_paths
 
     def run(self):
 
@@ -121,31 +128,51 @@ class Screensaver():
         pygame.event.clear()
 
         while True:
-            event = pygame.event.poll()
 
-            # Draw the background
-            self.screen.fill(BLACK)
+            for event in pygame.event.get():
+                print event
 
-            # Draw image to screen
-            self.screen.blit(self.image, self.image_rect)
-            if self.old_image:
-                self.screen.blit(self.old_image, self.old_image_rect)
-            pygame.display.update()
+                if self.paused:
+                    if event.type == MOUSEBUTTONUP:
+                        pygame.display.toggle_fullscreen()
+                        self.paused = False
 
-            #Fade out image
-            self.image.set_alpha(self.image.get_alpha() + _TRANS_INCR)
-            if self.old_image:
-                self.old_image.set_alpha(self.old_image.get_alpha() - _TRANS_INCR)
+                else:
+                    # Show new picture after delay
+                    if event.type == UPDATE_PICTURE_EVENT:
+                        self.next_picture()
 
-            # Show new picture after delay
-            if event.type == UPDATE_PICTURE_EVENT:
-                self.next_picture()
+                    elif event.type == KEYDOWN and event.key == K_SPACE:
+                        pygame.display.toggle_fullscreen()
+                        self.paused = True
 
-            # Exit if any other events are detected
-            elif event.type != pygame.NOEVENT:
-                self.quit()
+                    elif event.type == KEYUP:
+                        pass
 
-            self.fps_clock.tick(FPS)
+                    # Exit if any other events are detected
+                    elif event.type != pygame.NOEVENT:
+                        self.quit()
+
+                if event.type == pygame.QUIT:
+                    self.quit()
+
+            if not self.paused:
+
+                # Draw the background
+                self.screen.fill(BLACK)
+
+                # Draw image to screen
+                self.screen.blit(self.image, self.image_rect)
+                if self.old_image:
+                    self.screen.blit(self.old_image, self.old_image_rect)
+                pygame.display.update()
+
+                #Fade out image
+                self.image.set_alpha(self.image.get_alpha() + _TRANS_INCR)
+                if self.old_image:
+                    self.old_image.set_alpha(self.old_image.get_alpha() - _TRANS_INCR)
+
+                self.fps_clock.tick(FPS)
 
     def quit(self):
 
