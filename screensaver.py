@@ -17,6 +17,7 @@
 
 import sys
 import os
+import subprocess
 
 import pygame
 from pygame.locals import *
@@ -31,6 +32,8 @@ UPDATE_PICTURE_EVENT = USEREVENT + 1
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
 TRANSITION_TIME = 1.5  # Transition time between photos in seconds.
 _TRANS_INCR = int(255 / (TRANSITION_TIME * FPS)) # Opacity change per frame
+
+PHOTO_APP_CMD = ["eog", "-n"]
 
 
 # TODO: Can this be improved to make it more easily imported by other
@@ -145,6 +148,9 @@ class Screensaver():
                     elif event.type == KEYDOWN and event.key == K_SPACE:
                         pygame.display.toggle_fullscreen()
                         self.paused = True
+                        command = PHOTO_APP_CMD + self.image_paths
+                        print command
+                        subprocess.call(command)
 
                     elif event.type == KEYUP:
                         pass
