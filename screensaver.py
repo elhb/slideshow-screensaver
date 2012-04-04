@@ -27,7 +27,10 @@ BLACK = (0, 0, 0)
 FPS = 30
 PICTURE_DIR = os.path.expanduser("~/Pictures")
 UPDATE_PICTURE_EVENT = USEREVENT + 1
+
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
+TRANSITION_TIME = 1.5  # Transition time between photos in seconds.
+_TRANS_INCR = int(255 / (TRANSITION_TIME * FPS)) # Opacity change per frame
 
 
 # TODO: Can this be improved to make it more easily imported by other
@@ -47,6 +50,9 @@ class Screensaver():
         self._initialize_clock()
 
         self.pics = util.Pictures(PICTURE_DIR)
+
+        self.image = None
+        self.old_image = None
 
         self.run()
 
@@ -95,6 +101,10 @@ class Screensaver():
         # Set image as initally transparent
         image.set_alpha(0)
 
+        if self.image:
+            self.old_image = self.image
+            self.old_image_rect = self.image_rect
+
         self.image = image
         self.image_rect = image_rect
 
@@ -118,10 +128,14 @@ class Screensaver():
 
             # Draw image to screen
             self.screen.blit(self.image, self.image_rect)
+            if self.old_image:
+                self.screen.blit(self.old_image, self.old_image_rect)
             pygame.display.update()
 
             #Fade out image
-            self.image.set_alpha(self.image.get_alpha() + 5)
+            self.image.set_alpha(self.image.get_alpha() + _TRANS_INCR)
+            if self.old_image:
+                self.old_image.set_alpha(self.old_image.get_alpha() - _TRANS_INCR)
 
             # Show new picture after delay
             if event.type == UPDATE_PICTURE_EVENT:
