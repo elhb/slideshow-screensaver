@@ -131,17 +131,18 @@ class AppWindow(pyglet.window.Window):
         else:
             self.load_new_image()
             self.time = 0
-
-
+            
+            
 def start_photo_app(dt, window):
     if window.transitioning and window.old_picture_path:        # Open previous picture if tranisitioning
         subprocess.call([PHOTO_APP, window.old_picture_path])
     else:
         subprocess.call([PHOTO_APP, window.picture_path])       # Otherwise open current picture
     time.sleep(1)   #FIXME: Get rid of this.
-    app.set_fullscreen(True)
+    window.set_fullscreen(True)
+#    window.set_visible(True)
     start(app)
-
+            
 
 def start(window):
     pyglet.clock.schedule_interval(window.increase_opacity, 1.0 / 120)
@@ -208,8 +209,8 @@ if __name__ == "__main__":
             else:
                 pause(app)
                 app.set_fullscreen(False)
-                paused_label.draw()
-                pyglet.clock.schedule_once(start_photo_app, 1.0 / 4, window=app)
+#                app.set_visible(False)
+                pyglet.clock.schedule_once(start_photo_app, 1.0/4, window=app)
         else:
             quit(app)
 
