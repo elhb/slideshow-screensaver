@@ -77,6 +77,7 @@ class AppWindow(pyglet.window.Window):
 #        self.activate()
 
         random_pic = self.pics.get_random()
+
         temp_image = Image.open(random_pic)
 
         # Resize image to fit on screen
