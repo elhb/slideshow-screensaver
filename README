@@ -20,6 +20,7 @@ Installation
 
 	- python 2.7
 	- xautolock
+	- dbus-python
 	
 2. Install the python package: ::
 

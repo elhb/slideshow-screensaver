@@ -101,9 +101,23 @@ class AppWindow(pyglet.window.Window):
 def quit(window):
     window.close()
     pyglet.app.exit()
-
+    
+    
+def is_inhibited():
+    import dbus
+    session_bus = dbus.SessionBus()
+    dbus_object = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+    inhibited = dbus_object.IsInhibited(8, dbus_interface="org.gnome.SessionManager")
+    
+    return inhibited
 
 if __name__ == "__main__":
+    
+    if is_inhibited():
+        import sys
+        import subprocess
+        subprocess.call(["xautolock", "-restart"])
+        sys.exit()
 
     app = AppWindow()
     pyglet.clock.schedule_interval(app.increase_opacity, 1.0 / 120)
