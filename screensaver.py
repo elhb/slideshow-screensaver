@@ -174,7 +174,6 @@ if __name__ == "__main__":
     
     if is_inhibited():
         import sys
-        subprocess.call(["xautolock", "-restart"])
         sys.exit()
 
     app = AppWindow()
