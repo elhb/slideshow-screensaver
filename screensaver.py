@@ -16,7 +16,6 @@ PICTURE_DIR = os.path.expanduser("~/Pictures")
 CROP = True
 PICTURE_DELAY = 10
 
-
 paused_label = pyglet.text.Label('Paused',
                                   font_name='Ubuntu',
                                   font_size=36,
@@ -34,6 +33,7 @@ class AppWindow(pyglet.window.Window):
 
         self.paused = False
         self.pics = util.Pictures(PICTURE_DIR)
+        self.pic_history = []
         self.screen_x = self.width
         self.screen_y = self.height
         self.screen_ratio = float(self.screen_x) / self.screen_y
@@ -77,6 +77,9 @@ class AppWindow(pyglet.window.Window):
 #        self.activate()
 
         random_pic = self.pics.get_random()
+        self.pic_history.append(random_pic)
+        if len(self.pic_history) > 10:
+            self.pic_history.pop(0)
 
         temp_image = Image.open(random_pic)
 
@@ -135,10 +138,7 @@ class AppWindow(pyglet.window.Window):
             
             
 def start_photo_app(dt, window):
-    if window.transitioning and window.old_picture_path:        # Open previous picture if tranisitioning
-        subprocess.call([PHOTO_APP, window.old_picture_path])
-    else:
-        subprocess.call([PHOTO_APP, window.picture_path])       # Otherwise open current picture
+    subprocess.call([PHOTO_APP] + window.pic_history)
     time.sleep(1)   #FIXME: Get rid of this.
     window.set_fullscreen(True)
 #    window.set_visible(True)
