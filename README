@@ -21,6 +21,7 @@ Installation
 	- python 2.7
 	- python-gobject (for GObject 3+)
 	- dbus-python
+	- xautolock
 	
 2. Install the python package: ::
 
@@ -29,7 +30,7 @@ Installation
 3. Configure the screensaver to run automatically:
 
 	- Disable any other screensavers.
-	- Make ``watch-idle.py`` run at startup.
+	- Make ``slidesaver-daemon`` run at startup.
 	
 Plans
 #####
