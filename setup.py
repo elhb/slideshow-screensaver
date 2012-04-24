@@ -14,7 +14,7 @@ setup(name='slideshow-screensaver',
       url='https://github.com/jamesadney/slideshow-screensaver',
       license='GPL3',
       packages=find_packages(),
-      scripts=["watch-idle.py", "screensaver.py"],
+      scripts=["slidesaver-daemon", "screensaver.py"],
       long_description=long_description,
 
       # Also requires dbus-python and python-gobject
