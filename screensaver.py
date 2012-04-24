@@ -208,6 +208,12 @@ def is_locked(session_bus):
     return active
 
 
+def is_inhibited(session_bus):
+    session_manager_object = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
+    inhibited = session_manager_object.IsInhibited(8, dbus_interface="org.gnome.SessionManager")
+    return inhibited
+
+
 if __name__ == "__main__":
     
     session_bus = dbus.SessionBus()
@@ -215,5 +221,8 @@ if __name__ == "__main__":
     # Hack to avoid lock-screen freeze
     if is_locked(session_bus):
         sys.exit("Screensaver exiting because screen is locked.")
+        
+    if is_inhibited(session_bus):
+        sys.exit("Screensaver inhibited")
         
     app = Screensaver()
