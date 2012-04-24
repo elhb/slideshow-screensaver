@@ -19,6 +19,8 @@ import sys
 import os
 import subprocess
 
+import dbus
+
 import pygame
 from pygame.locals import *
 
@@ -198,7 +200,20 @@ class Screensaver():
 
         pygame.quit()
         sys.exit()
+        
+        
+def is_locked(session_bus):
+    screensaver_object = session_bus.get_object("org.gnome.ScreenSaver", "/")
+    active = screensaver_object.GetActive(dbus_interface="org.gnome.ScreenSaver")
+    return active
 
 
 if __name__ == "__main__":
+    
+    session_bus = dbus.SessionBus()
+    
+    # Hack to avoid lock-screen freeze
+    if is_locked(session_bus):
+        sys.exit("Screensaver exiting because screen is locked.")
+        
     app = Screensaver()
