@@ -161,7 +161,6 @@ class Screensaver():
                         pygame.display.toggle_fullscreen()
                         self.paused = True
                         command = PHOTO_APP_CMD + self.image_paths
-                        print command
                         subprocess.call(command)
 
                     elif event.type == KEYUP:
