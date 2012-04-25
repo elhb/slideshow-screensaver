@@ -17,5 +17,5 @@ setup(name='slideshow-screensaver',
       scripts=["slidesaver-daemon", "screensaver.py"],
       long_description=long_description,
 
-      # Also requires dbus-python and python-gobject
+      # Also requires dbus-python and xautolock
       install_requires=["distribute", "pygame"])
