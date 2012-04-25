@@ -1,14 +1,14 @@
 ##########################
-Slideshow Screensaver v0.2
+Slideshow Screensaver v0.3
 ##########################
 
 Introduction
 ############
 
-Slideshow Screensaver is a screensaver which displays a new photo every 10 
-seconds from ``$HOME/Pictures``.  If you want to customize the photo directory, 
-the time between photos or the screensaver delay you will need to edit the 
-source code for now.
+Slideshow Screensaver is a screensaver for Gnome which displays a new photo
+every 10 seconds from ``$HOME/Pictures``.  If you want to customize the photo
+directory, the time between photos or the screensaver delay you will need to
+edit the source code for now.
 
 This is a very simple app which, for now, might not play nicely with
 xscreensaver, gnome-screensaver, etc.
@@ -19,6 +19,7 @@ Installation
 1. Install the system-wide dependencies:
 
 	- python 2.7
+	- dbus-python
 	- xautolock
 	
 2. Install the python package: ::
@@ -36,11 +37,9 @@ Plans
 Short-term
 ==========
 
-- GUI Configuration.
-- Work around other screensavers
-- Alternative to xautolock?
-- 2D and 3D versions
+- GUI Configuration
 - Distribution packages
+- Simple image viewer app
 
 Long-term
 =========
@@ -48,5 +47,3 @@ Long-term
 - Work with other (or no) desktop environments
 - Python 3
 - Cool Transitions
-- Ability to pause slideshow, open file in photo manager, ...
-- Take over the world.
