@@ -60,7 +60,7 @@ class Screensaver():
         self.old_image = None
 
         # List of images loaded
-        self.image_paths = []
+        self.pic_history = []
         self.paused = False
 
         self.run()
@@ -88,7 +88,9 @@ class Screensaver():
     def next_picture(self):
 
         random_pic = self.pics.get_random()
-        self.image_paths.append(random_pic)
+        self.pic_history.append(random_pic)
+        if len(self.pic_history) > 10:
+            self.pic_history.pop(0)
 
         image = pygame.image.load(random_pic).convert()
 
@@ -160,7 +162,7 @@ class Screensaver():
                     elif event.type == KEYDOWN and event.key == K_SPACE:
                         pygame.display.toggle_fullscreen()
                         self.paused = True
-                        command = PHOTO_APP_CMD + self.image_paths
+                        command = PHOTO_APP_CMD + self.pic_history
                         subprocess.call(command)
 
                     elif event.type == KEYUP:
