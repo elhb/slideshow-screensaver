@@ -6,7 +6,7 @@ with open('README') as f:
     long_description = f.read()
 
 setup(name='slideshow-screensaver',
-      version='0.3',
+      version='0.3.1',
       description='Slideshow screensaver for Gnome based on Pygame',
       keywords=['slideshow', 'screensaver', 'gnome'],
       author='James Adney',
