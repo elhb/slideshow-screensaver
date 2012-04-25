@@ -1,5 +1,5 @@
 ##########################
-Slideshow Screensaver v0.1
+Slideshow Screensaver v0.3
 ##########################
 
 Introduction
@@ -19,7 +19,6 @@ Installation
 1. Install the system-wide dependencies:
 
 	- python 2.7
-	- python-gobject (for GObject 3+)
 	- dbus-python
 	- xautolock
 	
@@ -38,11 +37,9 @@ Plans
 Short-term
 ==========
 
-- GUI Configuration.
-- Use Gnome-Session to start watch-idle
-- Use Gnome-Session to watch for idle
-- Don't clash with gnome-screensaver
+- GUI Configuration
 - Distribution packages
+- Simple image viewer app
 
 Long-term
 =========
@@ -50,5 +47,3 @@ Long-term
 - Work with other (or no) desktop environments
 - Python 3
 - Cool Transitions
-- Ability to pause slideshow, open file in photo manager, ...
-- Take over the world.
