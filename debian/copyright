@@ -1,0 +1,8 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: slidshow-screensaver
+Upstream-Contact: James Adney <jfadney@gmail.com>
+Source: https://github.com/jamesadney/slideshow-screensaver
+
+Files: *
+Copyright: 2012 James Adney
+License: GPL-3+

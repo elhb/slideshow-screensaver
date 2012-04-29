@@ -1,0 +1,22 @@
+Source: slideshow-screensaver
+Section: python
+Priority: optional
+Maintainer: James Adney, <jfadney@gmail.com>
+Build-Depends: cdbs (>= 0.4.43),
+               debhelper (>= 7),
+               python,
+               python-central (>= 0.6.11)
+Standards-Version: 3.9.2
+XS-Python-Version: current
+
+
+Package: slideshow-screensaver
+Architecture: all
+XB-Python-Version: ${python:Versions}
+Depends: python-pygame, 
+ python-dbus, 
+ xautolock, 
+ ${misc:Depends}, 
+ ${python:Depends}
+Description: Slideshow Screensaver for Gnome using Pygame
+ Slideshow Screensaver is a screensaver for Gnome which displays a new photo every 10 seconds from $HOME/Pictures. If you want to customize the photo directory, the time between photos or the screensaver delay you will need to edit the source code for now.

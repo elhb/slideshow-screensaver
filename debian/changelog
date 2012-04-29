@@ -1,0 +1,5 @@
+slideshow-screensaver (0.3.1~ppa1) precise; urgency=low
+
+  * Initial Debian release.
+
+ -- James Adney <jfadney@gmail.com>  Sun, 29 Apr 2012 16:18:37 -0700
