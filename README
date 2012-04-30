@@ -16,21 +16,29 @@ xscreensaver, gnome-screensaver, etc.
 Installation
 ############
 
+Ubuntu
+======
+
+Packages are available on the `Launchpad PPA`_
+
+Other
+=====
+
 1. Install the system-wide dependencies:
 
 	- python 2.7
 	- dbus-python
 	- xautolock
-	
+
 2. Install the python package: ::
 
 	sudo pip install slideshow-screensaver
-	
+
 3. Configure the screensaver to run automatically:
 
 	- Disable any other screensavers.
 	- Make ``slidesaver-daemon`` run at startup.
-	
+
 Plans
 #####
 
@@ -47,3 +55,5 @@ Long-term
 - Work with other (or no) desktop environments
 - Python 3
 - Cool Transitions
+
+.. _`Launchpad PPA`: https://launchpad.net/~jfadney/+archive/slideshow-screensaver
