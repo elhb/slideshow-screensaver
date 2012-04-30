@@ -1,3 +1,9 @@
+slideshow-screensaver (0.3.1~ppa2) precise; urgency=low
+
+  * Added python-distribute to build-depends 
+
+ -- James Adney <jfadney@gmail.com>  Sun, 29 Apr 2012 17:12:01 -0700
+
 slideshow-screensaver (0.3.1~ppa1) precise; urgency=low
 
   * Initial Debian release.

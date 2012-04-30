@@ -5,7 +5,8 @@ Maintainer: James Adney, <jfadney@gmail.com>
 Build-Depends: cdbs (>= 0.4.43),
                debhelper (>= 7),
                python,
-               python-central (>= 0.6.11)
+               python-central (>= 0.6.11),
+               python-distribute
 Standards-Version: 3.9.2
 XS-Python-Version: current
 
