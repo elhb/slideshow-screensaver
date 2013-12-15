@@ -28,7 +28,8 @@ from slidesaver import util
 
 BLACK = (0, 0, 0)
 FPS = 30
-PICTURE_DIR = os.path.expanduser("~/Pictures")
+PICTURE_DIR = os.path.expanduser('/run/user/1000/gvfs/smb-share:server=oldie,share=iphonepictures')
+#PICTURE_DIR = os.path.expanduser("~/Pictures")
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 
 PICTURE_DELAY = 10000   # Time between pictures in milliseconds
@@ -94,6 +95,22 @@ class Screensaver():
 
         image = pygame.image.load(random_pic).convert()
 
+        #check rotation in exiftag and rotate the image accordingly
+        import PIL.ExifTags
+        import PIL.Image
+        img = PIL.Image.open(random_pic)
+        #print(img._getexif().items())
+        exif=dict((PIL.ExifTags.TAGS[k], v) for k, v in img._getexif().items() if k in PIL.ExifTags.TAGS)
+        try:
+            print random_pic,exif['Orientation']
+            if   exif['Orientation'] == 3 : 
+                image=pygame.transform.rotate(image,180)
+            elif exif['Orientation'] == 6 : 
+                image=pygame.transform.rotate(image,270)
+            elif exif['Orientation'] == 8 : 
+                image=pygame.transform.rotate(image,90)
+        except KeyError: pass
+
         # Resize image to fit on screen
         image_x, image_y = image.get_size()
         image_ratio = float(image_x) / image_y
@@ -104,13 +121,22 @@ class Screensaver():
             resized_x = (resized_y * image_x) / image_y
         else:
             # Crop pretty wide images to fill screen
-            if image_ratio >= 1:
+            if image_ratio >= 1.0:
                 resized_x = self.screen_x
                 resized_y = (resized_x * image_y) / image_x
 
             # Images that are square or vertically-oriented don't get cropped
             else:
                 resized_y = self.screen_y
+                resized_x = (resized_y * image_x) / image_y
+        
+        margin = 100
+        if margin:
+            if resized_x > self.screen_x-margin:
+                resized_x = self.screen_x-margin
+                resized_y = (resized_x * image_y) / image_x
+            if resized_y > self.screen_y-margin:
+                resized_y = self.screen_y-margin
                 resized_x = (resized_y * image_x) / image_y
 
         image = pygame.transform.scale(image, (resized_x, resized_y))
