@@ -230,8 +230,11 @@ class Screensaver():
         
         
 def is_locked(session_bus):
-    screensaver_object = session_bus.get_object("org.gnome.ScreenSaver", "/")
-    active = screensaver_object.GetActive(dbus_interface="org.gnome.ScreenSaver")
+    try:
+        screensaver_object = session_bus.get_object("org.gnome.ScreenSaver", "/")
+        active = screensaver_object.GetActive(dbus_interface="org.gnome.ScreenSaver")
+    except dbus.exceptions.DBusException:
+        active = False
     return active
 
 
