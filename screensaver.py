@@ -254,9 +254,9 @@ def findThisProcess( process_name ):
         if match: continue
         else:
             line=re.sub("\s\s+" , " ", line)
-       #     print line.split(' ')
-            return line.split(' ')[1]
-    return output
+            #print line.split(' ')
+            if line.split(' ') != ['']: return line.split(' ')[1]
+    return None
 
 def getCpuUsage( pid ):
     import os
@@ -274,7 +274,7 @@ def checkFlashPlayer():
     pid = findThisProcess( 'flash' )
     #print 'pid=',pid
     #print 'cpu=',getCpuUsage(pid)
-    if float(getCpuUsage(pid)) > 10: running = True
+    if pid and float(getCpuUsage(pid)) > 10: running = True
     else: running = False
     return running
 
