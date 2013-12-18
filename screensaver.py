@@ -64,7 +64,7 @@ class Screensaver():
         self.pic_history = []
         self.paused = False
 
-        self.run()
+        self.run()    
 
     def _set_screen_size(self):
         """..."""
@@ -228,7 +228,6 @@ class Screensaver():
         pygame.quit()
         sys.exit()
         
-        
 def is_locked(session_bus):
     try:
         screensaver_object = session_bus.get_object("org.gnome.ScreenSaver", "/")
@@ -237,14 +236,51 @@ def is_locked(session_bus):
         active = False
     return active
 
-
 def is_inhibited(session_bus):
     session_manager_object = session_bus.get_object("org.gnome.SessionManager", "/org/gnome/SessionManager")
     inhibited = session_manager_object.IsInhibited(8, dbus_interface="org.gnome.SessionManager")
     return inhibited
 
+def findThisProcess( process_name ):
+    import os
+    import subprocess
+    import re
+    ps     = subprocess.Popen("ps aux | grep "+process_name, shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read()
+    ps.stdout.close()
+    ps.wait()
+    for line in output.split('\n'):
+        match = re.search('grep',line)
+        if match: continue
+        else:
+            line=re.sub("\s\s+" , " ", line)
+       #     print line.split(' ')
+            return line.split(' ')[1]
+    return output
+
+def getCpuUsage( pid ):
+    import os
+    import subprocess
+    import re
+    ps     = subprocess.Popen("top -p "+pid+" -bn1 |tail -n1", shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read()
+    ps.stdout.close()
+    ps.wait()
+    output=re.sub("\s\s+" , " ", output)
+  #  print output.split(' ')
+    return output.split(' ')[9]
+
+def checkFlashPlayer():  
+    pid = findThisProcess( 'flash' )
+    #print 'pid=',pid
+    #print 'cpu=',getCpuUsage(pid)
+    if float(getCpuUsage(pid)) > 10: running = True
+    else: running = False
+    return running
 
 if __name__ == "__main__":
+    
+    if checkFlashPlayer(): sys.exit("Screensaver exiting because flashplayer is running.")
     
     session_bus = dbus.SessionBus()
     
