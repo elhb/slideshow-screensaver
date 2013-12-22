@@ -276,6 +276,8 @@ def checkFlashPlayer():
     #print 'cpu=',getCpuUsage(pid)
     if pid and float(getCpuUsage(pid)) > 10: running = True
     else: running = False
+    pid2 = findThisProcess( 'Silverlight' )
+    if pid2 and float(getCpuUsage(pid2)) > 10: running = True
     return running
 
 if __name__ == "__main__":
