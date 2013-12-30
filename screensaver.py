@@ -28,7 +28,7 @@ from slidesaver import util
 
 BLACK = (0, 0, 0)
 FPS = 30
-PICTURE_DIR = os.path.expanduser('/run/user/1000/gvfs/smb-share:server=oldie,share=iphonepictures')
+PICTURE_DIR = os.path.expanduser('/media/iphonepictures')
 #PICTURE_DIR = os.path.expanduser("~/Pictures")
 UPDATE_PICTURE_EVENT = USEREVENT + 1
 
